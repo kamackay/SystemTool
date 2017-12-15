@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 public class SystemTool {
 
 	protected static final VersionData VERSION = new VersionData(1, 0, 0);
+	protected static WorkstationLockListening workstationListener;
 
 	public static void main(String[] args) throws MalformedURLException {
 		// Check the SystemTray is supported
@@ -34,7 +35,9 @@ public class SystemTool {
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					showMessage("Hello");
 				} else if (SwingUtilities.isMiddleMouseButton(e)) {
-					showMessage("Middle Button?");
+					if (query("Are you sure you want to exit?") == 0) {
+						System.exit(0);
+					}
 				}
 			}
 		});
@@ -45,7 +48,20 @@ public class SystemTool {
 			System.out.println(errorMessage);
 			showMessage(errorMessage);
 		}
-		System.out.println("Started");
+		workstationListener = new WorkstationLockListening() {
+
+			@Override
+			protected void onMachineLocked(int sessionId) {
+				System.out.println("Machine Unlocked");
+			}
+
+			@Override
+			protected void onMachineUnlocked(int sessionId) {
+				showMessage("Welcome Back");				
+			}
+			
+		};
+		System.out.println("Started SystemTool");
 	}
 
 	/**
@@ -97,5 +113,27 @@ public class SystemTool {
 	 */
 	protected static void showMessage(String message) {
 		showMessage(message, "System Tool", JOptionPane.PLAIN_MESSAGE);
+	}
+
+	/**
+	 * Query a user
+	 * 
+	 * @param message
+	 * @param title
+	 * @return The user's response
+	 */
+	protected static int query(String message, String title) {
+		int result = JOptionPane.showConfirmDialog((Component) null, message, title, JOptionPane.OK_CANCEL_OPTION);
+		return result;
+	}
+
+	/**
+	 * Query a user
+	 * 
+	 * @param message
+	 * @return the user's response
+	 */
+	protected static int query(String message) {
+		return query(message, "System Tool");
 	}
 }
