@@ -1,7 +1,14 @@
 package com.keithmackay.test;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTException;
+import java.awt.Component;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
