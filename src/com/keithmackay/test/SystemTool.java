@@ -6,8 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class SystemTool {
+
+	protected static final VersionData VERSION = new VersionData(1, 0, 0);
 
 	public static void main(String[] args) throws MalformedURLException {
 		// Check the SystemTray is supported
@@ -29,17 +32,19 @@ public class SystemTool {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					showMessage("Hello");
+				} else if (SwingUtilities.isMiddleMouseButton(e)) {
+					showMessage("Middle Button?");
 				}
 			}
 		});
 		try {
 			tray.add(trayIcon);
 		} catch (AWTException e) {
-			String errorMessage ="TrayIcon could not be added."; 
+			String errorMessage = "TrayIcon could not be added";
 			System.out.println(errorMessage);
 			showMessage(errorMessage);
 		}
-
+		System.out.println("Started");
 	}
 
 	/**
