@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 public class SystemTool {
 
 	protected static final VersionData VERSION = new VersionData(1, 0, 0);
-	protected static WorkstationLockListening workstationListener;
+	protected static WorkstationLockListener workstationListener;
 
 	public static void main(String[] args) throws MalformedURLException {
 		// Check the SystemTray is supported
@@ -48,7 +48,7 @@ public class SystemTool {
 			System.out.println(errorMessage);
 			showMessage(errorMessage);
 		}
-		workstationListener = new WorkstationLockListening() {
+		workstationListener = new WorkstationLockListener() {
 
 			@Override
 			protected void onMachineLocked(int sessionId) {

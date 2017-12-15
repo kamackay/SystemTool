@@ -1,5 +1,7 @@
 package com.keithmackay.test;
 
+import java.util.Locale;
+
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
@@ -14,33 +16,30 @@ import com.sun.jna.platform.win32.WinUser.WindowProc;
 import com.sun.jna.platform.win32.Wtsapi32;
 import com.sun.jna.platform.win32.WinUser.MSG;
 
-public abstract class WorkstationLockListening implements WindowProc {
+public abstract class WorkstationLockListener implements WindowProc {
 
 	/**
 	 * Instantiates a new win32 window test.
 	 */
-	public WorkstationLockListening() {
+	public WorkstationLockListener() {
 		// define new window class
 		final WString windowClass = new WString("MyWindowClass");
 		final HMODULE hInst = Kernel32.INSTANCE.GetModuleHandle("");
 
 		WNDCLASSEX wClass = new WNDCLASSEX();
 		wClass.hInstance = hInst;
-		wClass.lpfnWndProc = WorkstationLockListening.this;
+		wClass.lpfnWndProc = WorkstationLockListener.this;
 		wClass.lpszClassName = windowClass;
 
 		// register window class
 		User32.INSTANCE.RegisterClassEx(wClass);
-		getLastError();
+		getLastError("Register Class Segment");
 
 		// create new window
 		final HWND hWnd = User32.INSTANCE.CreateWindowEx(User32.WS_EX_TOPMOST, windowClass,
-				"'TimeTracker hidden helper window to catch Windows events", 0, 0, 0, 0, 0, null, // WM_DEVICECHANGE
-																									// contradicts
-																									// parent=WinUser.HWND_MESSAGE
-				null, hInst, null);
+				"'TimeTracker hidden helper window to catch Windows events", 0, 0, 0, 0, 0, null, null, hInst, null);
 
-		getLastError();
+		getLastError("Creating Window");
 		System.out.println("window sucessfully created! window hwnd: " + hWnd.getPointer().toString());
 
 		Wtsapi32.INSTANCE.WTSRegisterSessionNotification(hWnd, Wtsapi32.NOTIFY_FOR_THIS_SESSION);
@@ -87,13 +86,17 @@ public abstract class WorkstationLockListening implements WindowProc {
 	 * 
 	 * @return the last error
 	 */
-	public int getLastError() {
+	public int getLastError(String message) {
 		int rc = Kernel32.INSTANCE.GetLastError();
-
-		if (rc != 0)
-			System.out.println("error: " + rc);
-
+		if (rc != 0) {
+			System.out.println(String.format(Locale.getDefault(), "Error - %s: %d",
+					message == null ? "WorkstationLockListener" : message, rc));
+		}
 		return rc;
+	}
+
+	public int getLastError() {
+		return getLastError(null);
 	}
 
 	/**
