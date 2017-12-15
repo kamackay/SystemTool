@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -55,6 +56,10 @@ public class SystemTool {
 	protected static PopupMenu createPopupMenu() {
 		final PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
+		aboutItem.addActionListener(event -> {
+			showMessage(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017",
+					VERSION.toString()));
+		});
 		MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(event -> System.exit(0));
 		// Add components to pop-up menu
