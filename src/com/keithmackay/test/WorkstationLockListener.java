@@ -2,6 +2,8 @@ package com.keithmackay.test;
 
 import java.util.Locale;
 
+import org.pmw.tinylog.Logger;
+
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
@@ -40,7 +42,7 @@ public abstract class WorkstationLockListener implements WindowProc {
 				"'TimeTracker hidden helper window to catch Windows events", 0, 0, 0, 0, 0, null, null, hInst, null);
 
 		getLastError("Creating Window");
-		System.out.println("window sucessfully created! window hwnd: " + hWnd.getPointer().toString());
+		Logger.info("window sucessfully created! window hwnd: " + hWnd.getPointer().toString());
 
 		Wtsapi32.INSTANCE.WTSRegisterSessionNotification(hWnd, Wtsapi32.NOTIFY_FOR_THIS_SESSION);
 
@@ -89,7 +91,7 @@ public abstract class WorkstationLockListener implements WindowProc {
 	public int getLastError(String message) {
 		int rc = Kernel32.INSTANCE.GetLastError();
 		if (rc != 0) {
-			System.out.println(String.format(Locale.getDefault(), "Error - %s: %d",
+			Logger.error(String.format(Locale.getDefault(), "%s - %d",
 					message == null ? "WorkstationLockListener" : message, rc));
 		}
 		return rc;

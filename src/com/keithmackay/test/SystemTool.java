@@ -16,59 +16,69 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.pmw.tinylog.Logger;
+
 public class SystemTool {
 
 	protected static final VersionData VERSION = new VersionData(1, 0, 0);
 	protected static WorkstationLockListener workstationListener;
 
 	public static void main(String[] args) throws MalformedURLException {
-		// Check the SystemTray is supported
-		if (!SystemTray.isSupported()) {
-			System.out.println("SystemTray is not supported");
-			return;
-		}
-		final TrayIcon trayIcon = new TrayIcon(
-				Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png")),
-				"System Tools");
-		trayIcon.setImageAutoSize(true);
-		final SystemTray tray = SystemTray.getSystemTray();
+		try {
+			Logger.info("Start Initialization");
+			// Check the SystemTray is supported
+			if (!SystemTray.isSupported()) {
+				Logger.error("SystemTray is not supported");
+				return;
+			}
+			final TrayIcon trayIcon = new TrayIcon(
+					Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png")),
+					"System Tools");
+			trayIcon.setImageAutoSize(true);
+			final SystemTray tray = SystemTray.getSystemTray();
 
-		// Create a pop-up menu components
-		final PopupMenu popup = createPopupMenu();
-		trayIcon.setPopupMenu(popup);
-		trayIcon.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					showMessage("Hello");
-				} else if (SwingUtilities.isMiddleMouseButton(e)) {
-					if (query("Are you sure you want to exit?") == 0) {
-						System.exit(0);
+			// Create a pop-up menu components
+			final PopupMenu popup = createPopupMenu();
+			trayIcon.setPopupMenu(popup);
+			trayIcon.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						// Left Button Click
+						showMessage("Hello");
+					} else if (SwingUtilities.isMiddleMouseButton(e)) {
+						// Scrollbar click
+						if (query("Are you sure you want to exit?") == 0) {
+							System.exit(0);
+						}
+					} else if (SwingUtilities.isRightMouseButton(e)) {
+						// Right Button Click
 					}
 				}
+			});
+			try {
+				tray.add(trayIcon);
+			} catch (AWTException e) {
+				String errorMessage = "TrayIcon could not be added";
+				Logger.error(errorMessage);
+				showMessage(errorMessage);
 			}
-		});
-		try {
-			tray.add(trayIcon);
-		} catch (AWTException e) {
-			String errorMessage = "TrayIcon could not be added";
-			System.out.println(errorMessage);
-			showMessage(errorMessage);
+			AutoCloseJOption.show("System Tools Started", 3000);
+			workstationListener = new WorkstationLockListener() {
+
+				@Override
+				protected void onMachineLocked(int sessionId) {
+					Logger.info("Machine Unlocked");
+				}
+
+				@Override
+				protected void onMachineUnlocked(int sessionId) {
+					AutoCloseJOption.show("Welcome Back", 3000);
+				}
+			};
+		} catch (Exception e) {
+			Logger.error(e);
 		}
-		workstationListener = new WorkstationLockListener() {
-
-			@Override
-			protected void onMachineLocked(int sessionId) {
-				System.out.println("Machine Unlocked");
-			}
-
-			@Override
-			protected void onMachineUnlocked(int sessionId) {
-				showMessage("Welcome Back");				
-			}
-			
-		};
-		System.out.println("Started SystemTool");
 	}
 
 	/**
@@ -80,8 +90,8 @@ public class SystemTool {
 		final PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
 		aboutItem.addActionListener(event -> {
-			showMessage(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017",
-					VERSION.toString()));
+			AutoCloseJOption.show(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017",
+					VERSION.toString()), 3000);
 		});
 		MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(event -> System.exit(0));
