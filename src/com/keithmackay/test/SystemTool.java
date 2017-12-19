@@ -11,6 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
@@ -22,6 +25,7 @@ public class SystemTool {
 
 	protected static final VersionData VERSION = new VersionData(1, 0, 0);
 	protected static WorkstationLockListener workstationListener;
+	protected static List<BackgroundProcess> backgroundProcesses;
 
 	public static void main(String[] args) throws MalformedURLException {
 		try {
@@ -63,6 +67,22 @@ public class SystemTool {
 				Logger.error(errorMessage);
 				showMessage(errorMessage);
 			}
+			backgroundProcesses = new ArrayList<BackgroundProcess>(Arrays.asList(new BackgroundProcess("Clean Downloads", 5000) {
+
+				@Override
+				public void doWork() {
+					AutoCloseJOption.show("I ran!", 3000);
+				}
+			}, new BackgroundProcess("TODO", 5000) {
+
+				@Override
+				public void doWork() {
+					// TODO Auto-generated method stub
+
+				}
+			}));
+			backgroundProcesses.forEach(process -> process.start());
+			
 			AutoCloseJOption.show("System Tools Started", 3000);
 			workstationListener = new WorkstationLockListener() {
 
