@@ -1,12 +1,14 @@
-package com.keithmackay.test;
+package com.keithmackay.test.processes;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.pmw.tinylog.Logger;
+
 public abstract class BackgroundProcess {
 	private String name;
 	private long time;
-	private boolean running;
+	private boolean running, started = false;
 	private Timer timer;
 	
 	public BackgroundProcess(String name, long time) {
@@ -27,7 +29,8 @@ public abstract class BackgroundProcess {
 	 * I am indecisive on names
 	 */
 	public void run() {
-		this.start();
+		if (this.started) this.running = true;
+		else this.start();
 	}
 	
 	/**
@@ -38,15 +41,23 @@ public abstract class BackgroundProcess {
 
 			@Override
 			public void run() {
-				doWork();				
+				if (running) doWork();
+				else Logger.info("{} scheduled but turned off", name);
 			}
 			
 		}, 0, this.time);
 		this.running = true;
+		this.started = true;
+	}
+	
+	public void pause() {
+		this.running = false;
 	}
 	
 	public boolean isRunning() {
 		return this.running;
 	}
 
+	
+	
 }

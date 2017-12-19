@@ -3,6 +3,7 @@ package com.keithmackay.test;
 import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.MenuItem;
+import java.awt.Menu;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -20,6 +21,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.pmw.tinylog.Logger;
+
+import com.keithmackay.test.processes.BackgroundProcess;
+import com.keithmackay.test.processes.Time;
 
 public class SystemTool {
 
@@ -40,6 +44,22 @@ public class SystemTool {
 					"System Tools");
 			trayIcon.setImageAutoSize(true);
 			final SystemTray tray = SystemTray.getSystemTray();
+
+			backgroundProcesses = new ArrayList<BackgroundProcess>(
+					Arrays.asList(new BackgroundProcess("Clean Downloads", Time.seconds(10)) {
+
+						@Override
+						public void doWork() {
+							AutoCloseJOption.show("I ran!", 3000);
+						}
+					}, new BackgroundProcess("TODO", Time.seconds(30)) {
+
+						@Override
+						public void doWork() {
+							// TODO Auto-generated method stub
+
+						}
+					}));
 
 			// Create a pop-up menu components
 			final PopupMenu popup = createPopupMenu();
@@ -67,22 +87,10 @@ public class SystemTool {
 				Logger.error(errorMessage);
 				showMessage(errorMessage);
 			}
-			backgroundProcesses = new ArrayList<BackgroundProcess>(Arrays.asList(new BackgroundProcess("Clean Downloads", 5000) {
 
-				@Override
-				public void doWork() {
-					AutoCloseJOption.show("I ran!", 3000);
-				}
-			}, new BackgroundProcess("TODO", 5000) {
-
-				@Override
-				public void doWork() {
-					// TODO Auto-generated method stub
-
-				}
-			}));
+			// Start Background Processes
 			backgroundProcesses.forEach(process -> process.start());
-			
+
 			AutoCloseJOption.show("System Tools Started", 3000);
 			workstationListener = new WorkstationLockListener() {
 
@@ -115,7 +123,25 @@ public class SystemTool {
 		});
 		MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(event -> System.exit(0));
+
+		Menu processesItem = new Menu("Processes");
+		backgroundProcesses.forEach(process -> {
+			MenuItem subItem = new MenuItem("Pause " + process.toString());
+			processesItem.add(subItem);
+			subItem.addActionListener(event -> {
+				if (process.isRunning()) {
+					process.pause();
+					subItem.setLabel("Start " + process.toString());
+				}
+				else {
+					process.run();
+					subItem.setLabel("Pause " + process.toString());
+				}
+			});
+		});
+
 		// Add components to pop-up menu
+		popup.add(processesItem);
 		popup.add(aboutItem);
 		popup.addSeparator();
 		popup.add(exitItem);
