@@ -14,8 +14,9 @@ def bytes_to_readable(byte_count: int) -> str:
     }
     x = 0
     while byte_count > 1024:
-        x+=1
-        b /= 1024
+        x += 1
+        byte_count /= 1024
+    return f"{byte_count} {unit[x]}"
 
 
 if __name__ == "__main__":
@@ -37,4 +38,4 @@ if __name__ == "__main__":
     search(sys.argv[1] if len(sys.argv) > 1 else "C:\\projects\\opentms",
            sys.argv[2] if len(sys.argv) > 2 else re.compile(".*"))
 
-    print(f"\n\nLargest File: {biggest[0]} - {bytes_to_readable(biggest[1]})")
+    print(f"\n\nLargest File: {biggest[0]} - {bytes_to_readable(biggest[1])}")
