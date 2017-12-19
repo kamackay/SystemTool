@@ -21,4 +21,4 @@ if __name__ == "__main__":
     search(sys.argv[1] if len(sys.argv) > 1 else "C:\\projects\\opentms",
            sys.argv[2] if len(sys.argv) > 2 else re.compile(".*"))
 
-    print(f"\n\nLargest File: {biggest[0]} bytes - \"{biggest[1]}\"")
+    print(f"\n\nLargest File: {biggest[0]} - {biggest[1]} bytes")
