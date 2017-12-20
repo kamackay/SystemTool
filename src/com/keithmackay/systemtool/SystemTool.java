@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -28,6 +30,7 @@ public class SystemTool {
 	public static void main(String[] args) {
 		try {
 			Logger.info("Start Initialization");
+			final Frame frame = new Frame("");
 			// Check the SystemTray is supported
 			if (!SystemTray.isSupported()) {
 				Logger.error("SystemTray is not supported");
@@ -65,21 +68,33 @@ public class SystemTool {
 			// Create a pop-up menu components
 			final PopupMenu popup = createPopupMenu();
 			trayIcon.setPopupMenu(popup);
+			popup.setShortcut(new MenuShortcut(32));
 			trayIcon.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if (SwingUtilities.isLeftMouseButton(e)) {
 						// Left Button Click
-						showMessage("Hello");
+						Logger.info("Left Click on trayIcon");
+						frame.setVisible(true);
+						frame.add(popup);
+						popup.show(frame, e.getXOnScreen(), e.getYOnScreen());
+						frame.setVisible(false);
 					} else if (SwingUtilities.isMiddleMouseButton(e)) {
 						// Scrollbar click
+						Logger.info("Middle Click on trayIcon");
 						if (query("Are you sure you want to exit?") == 0) {
 							System.exit(0);
 						}
+					} else if (SwingUtilities.isRightMouseButton(e)) {
+						Logger.info("Right Click on trayIcon");
 					}
 				}
 			});
+
 			try {
+				frame.setLocation(new Point(0, -100));
+				frame.setResizable(false);
+				frame.setVisible(false);
 				tray.add(trayIcon);
 			} catch (AWTException e) {
 				String errorMessage = "TrayIcon could not be added";
