@@ -88,7 +88,7 @@ public class SystemTool {
 			backgroundProcesses.forEach(BackgroundProcess::start);
 
 			// AutoCloseJOption.show("System Tools Started", 3000);
-			WorkstationLockListener workstationListener = new WorkstationLockListener() {
+			new WorkstationLockListener() {
 
 				@Override
 				protected void onMachineLocked(int sessionId) {
