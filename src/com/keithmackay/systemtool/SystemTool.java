@@ -96,13 +96,10 @@ public class SystemTool {
 				frame.setResizable(false);
 				frame.setVisible(false);
 				tray.add(trayIcon);
-				new ClipboardManager(new ClipboardChangeListener() {
-
-					@Override
-					public void onClipboardChange(String clipboard) {
-						Logger.info("Clipboard Contents Changed - {}", clipboard);
-					}
+				new ClipboardManager(clipboard -> {
+					Logger.info("Clipboard Contents Changed - {}", clipboard);
 				});
+				Runtime.getRuntime().addShutdownHook(new Thread(() -> tray.remove(trayIcon)));
 			} catch (AWTException e) {
 				String errorMessage = "TrayIcon could not be added";
 				Logger.error(errorMessage);
