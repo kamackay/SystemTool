@@ -10,8 +10,10 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +25,7 @@ import javax.swing.SwingUtilities;
 import org.pmw.tinylog.Logger;
 
 import com.keithmackay.test.processes.BackgroundProcess;
-import com.keithmackay.test.processes.Time;
+import com.keithmackay.test.utils.Time;
 
 public class SystemTool {
 
@@ -50,9 +52,17 @@ public class SystemTool {
 
 						@Override
 						public void doWork() {
-							AutoCloseJOption.show("I ran!", 3000);
+							File downloadsFolder = new File(Paths.get(System.getProperty("user.home"), "Downloads").toString());
+							long now = System.currentTimeMillis();
+							StringBuilder sb = new StringBuilder();
+							Arrays.asList(downloadsFolder.listFiles()).forEach(file -> {
+								if (now - Time.days(1) > file.lastModified()) {
+									sb.append(file.toString() + "\n");
+								}
+							});
+							AutoCloseJOption.show(sb.toString(), 5000);
 						}
-					}, new BackgroundProcess("TODO", Time.seconds(30)) {
+					}, new BackgroundProcess("Health Check", Time.seconds(30)) {
 
 						@Override
 						public void doWork() {
