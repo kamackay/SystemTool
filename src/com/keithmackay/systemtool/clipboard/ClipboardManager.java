@@ -1,43 +1,53 @@
 package com.keithmackay.systemtool.clipboard;
 
+import com.keithmackay.systemtool.SizedStack;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClipboardManager {
-	private ClipboardChangeListener listener;
-	private String contents = null, oldContents = null;
 	private Clipboard clipboard;
+	private SizedStack<String> history;
 
 	public ClipboardManager(ClipboardChangeListener listener) {
-		this.listener = listener;
+		this.history = new SizedStack<>(100);
+		this.history.push(null);
 		this.clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Timer t = new Timer();
 		t.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				ClipboardManager.this.getContents();
-				if (contents != null && !contents.equals(oldContents)) {
+				String cont = ClipboardManager.this.getContents();
+				if (cont != null && !cont.equals(getMostRecent())) {
 					//Clipboard Changed
-					listener.onClipboardChange(ClipboardManager.this.contents);
+					history.push(cont);
+					listener.onClipboardChange(cont);
 				}
 			}
 		}, 0, 5);
 
 	}
 
-	String getContents() {
+	private String getMostRecent() {
+		return this.history.lastElement();
+	}
+
+	private String getContents() {
 		try {
-			this.oldContents = this.contents;
-			this.contents = (String) clipboard.getData(DataFlavor.stringFlavor);
+			return (String) clipboard.getData(DataFlavor.stringFlavor);
 		} catch (Exception e) {
 			// Logger.error(e, "Error getting clipboard data");
 			// Ignore for now
 		}
-		return this.contents;
+		return this.getMostRecent();
 	}
 
+	public SizedStack<String> getHistory() {
+		return this.history;
+	}
 
 }
