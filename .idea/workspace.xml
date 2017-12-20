@@ -7,7 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="87145a84-d866-4c30-b27d-483470f8213f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/SystemTool_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/SystemTool_jar.xml" />
+      <change beforePath="$PROJECT_DIR$/src/com/keithmackay/systemtool/SystemTool.java" afterPath="$PROJECT_DIR$/src/com/keithmackay/systemtool/SystemTool.java" />
+      <change beforePath="$PROJECT_DIR$/src/com/keithmackay/systemtool/processes/BackgroundProcess.java" afterPath="$PROJECT_DIR$/src/com/keithmackay/systemtool/processes/BackgroundProcess.java" />
+      <change beforePath="$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/Settings.java" afterPath="$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/Settings.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,13 +24,14 @@
       <file leaf-file-name="SystemTool.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/SystemTool.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1027">
-              <caret line="11" column="35" lean-forward="true" selection-start-line="11" selection-start-column="35" selection-end-line="11" selection-end-column="35" />
+            <state relative-caret-position="350">
+              <caret line="177" column="40" lean-forward="false" selection-start-line="177" selection-start-column="40" selection-end-line="177" selection-end-column="40" />
               <folding>
-                <element signature="e#6292#6293#0" expanded="true" />
-                <element signature="e#6361#6362#0" expanded="true" />
-                <element signature="e#6803#6804#0" expanded="true" />
-                <element signature="e#6846#6847#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#6864#6865#0" expanded="true" />
+                <element signature="e#6933#6934#0" expanded="true" />
+                <element signature="e#7375#7376#0" expanded="true" />
+                <element signature="e#7418#7419#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -38,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/Settings.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="39">
-              <caret line="3" column="125" lean-forward="false" selection-start-line="3" selection-start-column="125" selection-end-line="3" selection-end-column="125" />
+              <caret line="3" column="192" lean-forward="false" selection-start-line="3" selection-start-column="192" selection-end-line="3" selection-end-column="192" />
               <folding />
             </state>
           </provider>
@@ -47,8 +50,8 @@
       <file leaf-file-name="BackgroundProcess.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/processes/BackgroundProcess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26">
-              <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+            <state relative-caret-position="429">
+              <caret line="63" column="96" lean-forward="false" selection-start-line="63" selection-start-column="96" selection-end-line="63" selection-end-column="96" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -59,8 +62,8 @@
       <file leaf-file-name="SettingsManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/SettingsManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1352">
-              <caret line="107" column="5" lean-forward="true" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
+            <state relative-caret-position="363">
+              <caret line="103" column="61" lean-forward="false" selection-start-line="103" selection-start-column="61" selection-end-line="103" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2301#2302#0" expanded="true" />
@@ -108,6 +111,7 @@
         <option value="$PROJECT_DIR$/src/com/keithmackay/test/settings/SettingsManager.java" />
         <option value="$PROJECT_DIR$/src/com/keithmackay/test/SystemTool.java" />
         <option value="$PROJECT_DIR$/src/com/keithmackay/test/utils/VersionData.java" />
+        <option value="$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/Settings.java" />
         <option value="$PROJECT_DIR$/src/com/keithmackay/systemtool/SystemTool.java" />
       </list>
     </option>
@@ -345,7 +349,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39979014" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35106382" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -359,7 +363,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -369,10 +373,11 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#6292#6293#0" expanded="true" />
-            <element signature="e#6361#6362#0" expanded="true" />
-            <element signature="e#6803#6804#0" expanded="true" />
-            <element signature="e#6846#6847#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#6864#6865#0" expanded="true" />
+            <element signature="e#6933#6934#0" expanded="true" />
+            <element signature="e#7375#7376#0" expanded="true" />
+            <element signature="e#7418#7419#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -418,10 +423,11 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#6292#6293#0" expanded="true" />
-            <element signature="e#6361#6362#0" expanded="true" />
-            <element signature="e#6803#6804#0" expanded="true" />
-            <element signature="e#6846#6847#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#6864#6865#0" expanded="true" />
+            <element signature="e#6933#6934#0" expanded="true" />
+            <element signature="e#7375#7376#0" expanded="true" />
+            <element signature="e#7418#7419#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -475,14 +481,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/Settings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="3" column="125" lean-forward="false" selection-start-line="3" selection-start-column="125" selection-end-line="3" selection-end-column="125" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/src.zip!/java/awt/MenuItem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -507,34 +505,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/SettingsManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1352">
-          <caret line="107" column="5" lean-forward="true" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2301#2302#0" expanded="true" />
-            <element signature="e#2334#2335#0" expanded="true" />
-            <element signature="e#2497#2498#0" expanded="true" />
-            <element signature="e#2550#2551#0" expanded="true" />
-            <element signature="e#2599#2600#0" expanded="true" />
-            <element signature="e#2649#2650#0" expanded="true" />
-            <element signature="e#2701#2702#0" expanded="true" />
-            <element signature="e#2751#2752#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/processes/BackgroundProcess.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/utils/Time.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="286">
@@ -551,15 +521,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/processes/BackgroundProcess.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="63" column="96" lean-forward="false" selection-start-line="63" selection-start-column="96" selection-end-line="63" selection-end-column="96" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/Settings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="39">
+          <caret line="3" column="192" lean-forward="false" selection-start-line="3" selection-start-column="192" selection-end-line="3" selection-end-column="192" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/settings/SettingsManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="103" column="61" lean-forward="false" selection-start-line="103" selection-start-column="61" selection-end-line="103" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2301#2302#0" expanded="true" />
+            <element signature="e#2334#2335#0" expanded="true" />
+            <element signature="e#2497#2498#0" expanded="true" />
+            <element signature="e#2550#2551#0" expanded="true" />
+            <element signature="e#2599#2600#0" expanded="true" />
+            <element signature="e#2649#2650#0" expanded="true" />
+            <element signature="e#2701#2702#0" expanded="true" />
+            <element signature="e#2751#2752#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/keithmackay/systemtool/SystemTool.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1027">
-          <caret line="11" column="35" lean-forward="true" selection-start-line="11" selection-start-column="35" selection-end-line="11" selection-end-column="35" />
+        <state relative-caret-position="350">
+          <caret line="177" column="40" lean-forward="false" selection-start-line="177" selection-start-column="40" selection-end-line="177" selection-end-column="40" />
           <folding>
-            <element signature="e#6292#6293#0" expanded="true" />
-            <element signature="e#6361#6362#0" expanded="true" />
-            <element signature="e#6803#6804#0" expanded="true" />
-            <element signature="e#6846#6847#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#6864#6865#0" expanded="true" />
+            <element signature="e#6933#6934#0" expanded="true" />
+            <element signature="e#7375#7376#0" expanded="true" />
+            <element signature="e#7418#7419#0" expanded="true" />
           </folding>
         </state>
       </provider>

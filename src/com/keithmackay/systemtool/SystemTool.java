@@ -95,12 +95,16 @@ public class SystemTool {
 
 				@Override
 				protected void onMachineLocked(int sessionId) {
-					Logger.info("Machine Unlocked");
+					if (settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)) {
+						Logger.info("Machine Unlocked");
+					}
 				}
 
 				@Override
 				protected void onMachineUnlocked(int sessionId) {
-					AutoCloseJOption.show("Welcome Back", 3000);
+					if (settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)) {
+						AutoCloseJOption.show("Welcome Back", 3000);
+					}
 				}
 			};
 		} catch (Exception e) {
@@ -150,23 +154,30 @@ public class SystemTool {
 
 		Menu processesItem = new Menu("Processes");
 		backgroundProcesses.forEach(process -> {
-			MenuItem subItem = new MenuItem((process.isRunning() ? "Pause " : "Start ") + process.toString());
+			CheckboxMenuItem subItem = new CheckboxMenuItem(process.toString());
+			subItem.setState(process.isRunning());
 			processesItem.add(subItem);
-			subItem.addActionListener(event -> {
+			subItem.addItemListener(event -> {
 				if (process.isRunning()) {
 					process.pause();
-					subItem.setLabel("Start " + process.toString());
+					subItem.setState(false);
 					Logger.info("Started process {}", process.toString());
 				} else {
 					process.run();
-					subItem.setLabel("Pause " + process.toString());
+					subItem.setState(true);
 					Logger.info("Paused process {}", process.toString());
 				}
 			});
 		});
 
+		CheckboxMenuItem workspaceListenerItem = new CheckboxMenuItem();
+		workspaceListenerItem.setLabel("Workspace Monitor");
+		workspaceListenerItem.setState(settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true));
+		workspaceListenerItem.addItemListener(event -> settingsManager.setBool(Settings.WORKSPACE_MONITOR_RUNNING, !settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)));
+
 		// Add components to pop-up menu
 		popup.add(processesItem);
+		popup.add(workspaceListenerItem);
 		popup.add(aboutItem);
 		popup.addSeparator();
 		popup.add(exitItem);

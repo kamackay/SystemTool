@@ -57,11 +57,11 @@ public abstract class BackgroundProcess {
 	}
 
 	public boolean isRunning() {
-		return this.settingsManager.getBool(Settings.BACKGROUND_PROCESS_RUNNNG + "_" + name, true);
+		return this.settingsManager.getBool(Settings.BACKGROUND_PROCESS_RUNNING + "_" + name, true);
 	}
 
 	private void setRunning(boolean running){
-		this.settingsManager.setBool(Settings.BACKGROUND_PROCESS_RUNNNG + "_" + name, running);
+		this.settingsManager.setBool(Settings.BACKGROUND_PROCESS_RUNNING + "_" + name, running);
 	}
 
 
