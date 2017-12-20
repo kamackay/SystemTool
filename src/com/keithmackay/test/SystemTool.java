@@ -1,6 +1,8 @@
 package com.keithmackay.test;
 
 import com.keithmackay.test.processes.BackgroundProcess;
+import com.keithmackay.test.settings.Settings;
+import com.keithmackay.test.settings.SettingsManager;
 import com.keithmackay.test.utils.Time;
 import org.pmw.tinylog.Logger;
 
@@ -20,6 +22,7 @@ public class SystemTool {
 
 	private static final VersionData VERSION = new VersionData(1, 0, 0);
 	private static List<BackgroundProcess> backgroundProcesses;
+	private static SettingsManager settingsManager;
 
 	public static void main(String[] args) {
 		try {
@@ -33,16 +36,21 @@ public class SystemTool {
 			trayIcon.setImageAutoSize(true);
 			final SystemTray tray = SystemTray.getSystemTray();
 
+			settingsManager = SettingsManager.getInstance();
+			settingsManager.setString(Settings.VERSION, VERSION.toString());
+
 			backgroundProcesses = new ArrayList<>(Arrays.asList(new BackgroundProcess("Clean Downloads", Time.minutes(5)) {
 
 				@Override
 				public void doWork() {
 					File downloadsFolder = new File(Paths.get(System.getProperty("user.home"), "Downloads").toString());
-					List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(1));
+					List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(14));
 					if (filesDeleted.size() > 0) {
 						StringBuilder sb = new StringBuilder();
 						filesDeleted.forEach(f -> sb.append(f).append("\n"));
 						AutoCloseJOption.show(truncate(sb.toString(), 1000), "Files Deleted", 5000);
+					} else {
+						Logger.info("No files in Downloads folder to delete");
 					}
 				}
 			}, new BackgroundProcess("Health Check", Time.seconds(30)) {
@@ -67,8 +75,6 @@ public class SystemTool {
 						if (query("Are you sure you want to exit?") == 0) {
 							System.exit(0);
 						}
-					} else if (SwingUtilities.isRightMouseButton(e)) {
-						// Right Button Click
 					}
 				}
 			});
@@ -116,7 +122,10 @@ public class SystemTool {
 				try {
 					if (!file.isDirectory() || Objects.requireNonNull(file.list()).length == 0) {
 						boolean deleted = file.delete();
-						if (deleted) deletedFiles.add(file.getAbsolutePath());
+						if (deleted) {
+							deletedFiles.add(file.getAbsolutePath());
+							Logger.info("Deleted File {}", file.getAbsolutePath());
+						}
 					}
 				} catch (Exception e) {
 					Logger.error(e, "Error Deleting file");
@@ -140,15 +149,17 @@ public class SystemTool {
 
 		Menu processesItem = new Menu("Processes");
 		backgroundProcesses.forEach(process -> {
-			MenuItem subItem = new MenuItem("Pause " + process.toString());
+			MenuItem subItem = new MenuItem((process.isRunning() ? "Pause " : "Start ") + process.toString());
 			processesItem.add(subItem);
 			subItem.addActionListener(event -> {
 				if (process.isRunning()) {
 					process.pause();
 					subItem.setLabel("Start " + process.toString());
+					Logger.info("Started process {}", process.toString());
 				} else {
 					process.run();
 					subItem.setLabel("Pause " + process.toString());
+					Logger.info("Paused process {}", process.toString());
 				}
 			});
 		});
