@@ -29,33 +29,29 @@ public class SystemTool {
 				Logger.error("SystemTray is not supported");
 				return;
 			}
-			final TrayIcon trayIcon = new TrayIcon(
-					Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png")),
-					"System Tools");
+			final TrayIcon trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png")), "System Tools");
 			trayIcon.setImageAutoSize(true);
 			final SystemTray tray = SystemTray.getSystemTray();
 
-			backgroundProcesses = new ArrayList<>(
-					Arrays.asList(new BackgroundProcess("Clean Downloads", Time.minutes(5)) {
+			backgroundProcesses = new ArrayList<>(Arrays.asList(new BackgroundProcess("Clean Downloads", Time.minutes(5)) {
 
-						@Override
-						public void doWork() {
-							File downloadsFolder = new File(
-									Paths.get(System.getProperty("user.home"), "Downloads").toString());
-							List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(1));
-							if (filesDeleted.size() > 0) {
-								StringBuilder sb = new StringBuilder();
-								filesDeleted.forEach(f -> sb.append(f).append("\n"));
-								AutoCloseJOption.show(truncate(sb.toString(), 1000), "Files Deleted", 5000);
-							}
-						}
-					}, new BackgroundProcess("Health Check", Time.seconds(30)) {
+				@Override
+				public void doWork() {
+					File downloadsFolder = new File(Paths.get(System.getProperty("user.home"), "Downloads").toString());
+					List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(1));
+					if (filesDeleted.size() > 0) {
+						StringBuilder sb = new StringBuilder();
+						filesDeleted.forEach(f -> sb.append(f).append("\n"));
+						AutoCloseJOption.show(truncate(sb.toString(), 1000), "Files Deleted", 5000);
+					}
+				}
+			}, new BackgroundProcess("Health Check", Time.seconds(30)) {
 
-						@Override
-						public void doWork() {
-							// TODO something
-						}
-					}));
+				@Override
+				public void doWork() {
+					// TODO something
+				}
+			}));
 
 			// Create a pop-up menu components
 			final PopupMenu popup = createPopupMenu();
@@ -138,8 +134,7 @@ public class SystemTool {
 	private static PopupMenu createPopupMenu() {
 		final PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
-		aboutItem.addActionListener(event -> AutoCloseJOption.show(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017",
-				VERSION.toString()), 3000));
+		aboutItem.addActionListener(event -> AutoCloseJOption.show(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017", VERSION.toString()), 3000));
 		MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(event -> System.exit(0));
 
