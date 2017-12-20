@@ -1,4 +1,4 @@
-package com.keithmackay.test.utils;
+package com.keithmackay.systemtool.utils;
 
 public class Time {
 

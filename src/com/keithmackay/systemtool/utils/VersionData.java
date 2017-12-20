@@ -1,11 +1,11 @@
-package com.keithmackay.test;
+package com.keithmackay.systemtool.utils;
 
 import java.util.Locale;
 
 public class VersionData {
 	private int major, minor, revision;
 
-	VersionData(int major, int minor, int revision) {
+	public VersionData(int major, int minor, int revision) {
 		this.major = major;
 		this.minor = minor;
 		this.revision = revision;

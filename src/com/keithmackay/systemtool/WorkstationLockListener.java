@@ -1,4 +1,4 @@
-package com.keithmackay.test;
+package com.keithmackay.systemtool;
 
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32;
@@ -16,7 +16,7 @@ import java.util.Locale;
 public abstract class WorkstationLockListener implements WindowProc {
 
 	/**
-	 * Instantiates a new win32 window test.
+	 * Instantiates a new win32 window systemtool.
 	 */
 	WorkstationLockListener() {
 		// define new window class

@@ -1,7 +1,7 @@
-package com.keithmackay.test.processes;
+package com.keithmackay.systemtool.processes;
 
-import com.keithmackay.test.settings.Settings;
-import com.keithmackay.test.settings.SettingsManager;
+import com.keithmackay.systemtool.settings.Settings;
+import com.keithmackay.systemtool.settings.SettingsManager;
 import org.pmw.tinylog.Logger;
 
 import java.util.Timer;

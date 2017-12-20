@@ -1,4 +1,4 @@
-package com.keithmackay.test.settings;
+package com.keithmackay.systemtool.settings;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonReader;
 import org.pmw.tinylog.Logger;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;

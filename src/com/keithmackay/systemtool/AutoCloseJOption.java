@@ -1,4 +1,4 @@
-package com.keithmackay.test;
+package com.keithmackay.systemtool;
 
 import javax.swing.*;
 

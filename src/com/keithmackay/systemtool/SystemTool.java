@@ -1,9 +1,10 @@
-package com.keithmackay.test;
+package com.keithmackay.systemtool;
 
-import com.keithmackay.test.processes.BackgroundProcess;
-import com.keithmackay.test.settings.Settings;
-import com.keithmackay.test.settings.SettingsManager;
-import com.keithmackay.test.utils.Time;
+import com.keithmackay.systemtool.processes.BackgroundProcess;
+import com.keithmackay.systemtool.settings.Settings;
+import com.keithmackay.systemtool.settings.SettingsManager;
+import com.keithmackay.systemtool.utils.Time;
+import com.keithmackay.systemtool.utils.VersionData;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
-import static com.keithmackay.test.utils.Utils.truncate;
+import static com.keithmackay.systemtool.utils.Utils.truncate;
 
 public class SystemTool {
 
