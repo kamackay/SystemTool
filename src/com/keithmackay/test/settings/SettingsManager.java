@@ -88,7 +88,7 @@ public class SettingsManager {
 		this.setString(name, value ? "true" : "false");
 	}
 
-	public void setInt(String name, int value) {
+	public void setLong(String name, long value) {
 		this.setString(name, String.valueOf(value));
 	}
 
@@ -105,6 +105,28 @@ public class SettingsManager {
 		String str = this.getString(name, null);
 		if (str == null) return defaultVal;
 		return "true".equals(str);
+	}
+
+	public long getLong(String name, long defaultVal) {
+		String str = this.getString(name, null);
+		if (str == null) return defaultVal;
+		try {
+			return Long.parseLong(str);
+		} catch (NumberFormatException e) {
+			Logger.error(e, "Could not parse setting value {}", str);
+			return defaultVal;
+		}
+	}
+
+	public double getDouble(String name, double defaultVal) {
+		String str = this.getString(name, null);
+		if (str == null) return defaultVal;
+		try {
+			return Double.parseDouble(str);
+		} catch (NumberFormatException e) {
+			Logger.error(e, "Could not parse setting value {}", str);
+			return defaultVal;
+		}
 	}
 
 	private void saveSettings() {
