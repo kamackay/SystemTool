@@ -1,40 +1,27 @@
 package com.keithmackay.test;
 
-import java.awt.AWTException;
-import java.awt.Component;
-import java.awt.MenuItem;
-import java.awt.Menu;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
+import com.keithmackay.test.processes.BackgroundProcess;
+import com.keithmackay.test.utils.Time;
+import org.pmw.tinylog.Logger;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import org.pmw.tinylog.Logger;
-
-import com.keithmackay.test.processes.BackgroundProcess;
-import com.keithmackay.test.utils.Time;
 import static com.keithmackay.test.utils.Utils.truncate;
 
 public class SystemTool {
 
-	protected static final VersionData VERSION = new VersionData(1, 0, 0);
-	protected static WorkstationLockListener workstationListener;
-	protected static List<BackgroundProcess> backgroundProcesses;
+	private static final VersionData VERSION = new VersionData(1, 0, 0);
+	private static List<BackgroundProcess> backgroundProcesses;
 
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) {
 		try {
 			Logger.info("Start Initialization");
 			// Check the SystemTray is supported
@@ -48,7 +35,7 @@ public class SystemTool {
 			trayIcon.setImageAutoSize(true);
 			final SystemTray tray = SystemTray.getSystemTray();
 
-			backgroundProcesses = new ArrayList<BackgroundProcess>(
+			backgroundProcesses = new ArrayList<>(
 					Arrays.asList(new BackgroundProcess("Clean Downloads", Time.minutes(5)) {
 
 						@Override
@@ -58,7 +45,7 @@ public class SystemTool {
 							List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(1));
 							if (filesDeleted.size() > 0) {
 								StringBuilder sb = new StringBuilder();
-								filesDeleted.forEach(f -> sb.append(f + "\n"));
+								filesDeleted.forEach(f -> sb.append(f).append("\n"));
 								AutoCloseJOption.show(truncate(sb.toString(), 1000), "Files Deleted", 5000);
 							}
 						}
@@ -98,10 +85,10 @@ public class SystemTool {
 			}
 
 			// Start Background Processes
-			backgroundProcesses.forEach(process -> process.start());
+			backgroundProcesses.forEach(BackgroundProcess::start);
 
 			// AutoCloseJOption.show("System Tools Started", 3000);
-			workstationListener = new WorkstationLockListener() {
+			WorkstationLockListener workstationListener = new WorkstationLockListener() {
 
 				@Override
 				protected void onMachineLocked(int sessionId) {
@@ -122,18 +109,18 @@ public class SystemTool {
 	 * Delete anything in the given path older than the given time (ms)
 	 */
 	private static List<String> cleanupPath(File path, long time) {
-		List<String> deletedFiles = new ArrayList<String>();
+		List<String> deletedFiles = new ArrayList<>();
 		long now = System.currentTimeMillis();
-		Arrays.asList(path.listFiles()).forEach(file -> {
+		Arrays.asList(Objects.requireNonNull(path.listFiles())).forEach(file -> {
 			if (file.isDirectory()) {
 				deletedFiles.addAll(cleanupPath(file, time));
 			}
 			// If the file is older than the limit or is an empty folder
-			if (now - time > file.lastModified() || (file.isDirectory() && file.list().length == 0)) {
+			if (now - time > file.lastModified() || (file.isDirectory() && Objects.requireNonNull(file.list()).length == 0)) {
 				try {
-					if ((file.isDirectory() && file.list().length == 0) || !file.isDirectory()) {
-						file.delete();
-						deletedFiles.add(file.getAbsolutePath());
+					if (!file.isDirectory() || Objects.requireNonNull(file.list()).length == 0) {
+						boolean deleted = file.delete();
+						if (deleted) deletedFiles.add(file.getAbsolutePath());
 					}
 				} catch (Exception e) {
 					Logger.error(e, "Error Deleting file");
@@ -145,10 +132,10 @@ public class SystemTool {
 
 	/**
 	 * Create the context menu for the Tray Icon
-	 * 
+	 *
 	 * @return The Context Menu
 	 */
-	protected static PopupMenu createPopupMenu() {
+	private static PopupMenu createPopupMenu() {
 		final PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
 		aboutItem.addActionListener(event -> {
@@ -183,7 +170,7 @@ public class SystemTool {
 
 	/**
 	 * Show a message
-	 * 
+	 *
 	 * @param message
 	 * @param title
 	 * @param type
@@ -194,7 +181,7 @@ public class SystemTool {
 
 	/**
 	 * Show a message
-	 * 
+	 *
 	 * @param message
 	 * @param title
 	 */
@@ -204,7 +191,7 @@ public class SystemTool {
 
 	/**
 	 * Show a message
-	 * 
+	 *
 	 * @param message
 	 */
 	protected static void showMessage(String message) {
@@ -213,19 +200,19 @@ public class SystemTool {
 
 	/**
 	 * Query a user
-	 * 
+	 *
 	 * @param message
 	 * @param title
 	 * @return The user's response
 	 */
 	protected static int query(String message, String title) {
-		int result = JOptionPane.showConfirmDialog((Component) null, message, title, JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION);
 		return result;
 	}
 
 	/**
 	 * Query a user
-	 * 
+	 *
 	 * @param message
 	 * @return the user's response
 	 */
