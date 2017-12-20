@@ -26,6 +26,7 @@ import org.pmw.tinylog.Logger;
 
 import com.keithmackay.test.processes.BackgroundProcess;
 import com.keithmackay.test.utils.Time;
+import static com.keithmackay.test.utils.Utils.truncate;
 
 public class SystemTool {
 
@@ -48,26 +49,24 @@ public class SystemTool {
 			final SystemTray tray = SystemTray.getSystemTray();
 
 			backgroundProcesses = new ArrayList<BackgroundProcess>(
-					Arrays.asList(new BackgroundProcess("Clean Downloads", Time.seconds(10)) {
+					Arrays.asList(new BackgroundProcess("Clean Downloads", Time.minutes(5)) {
 
 						@Override
 						public void doWork() {
-							File downloadsFolder = new File(Paths.get(System.getProperty("user.home"), "Downloads").toString());
-							long now = System.currentTimeMillis();
-							StringBuilder sb = new StringBuilder();
-							Arrays.asList(downloadsFolder.listFiles()).forEach(file -> {
-								if (now - Time.days(1) > file.lastModified()) {
-									sb.append(file.toString() + "\n");
-								}
-							});
-							AutoCloseJOption.show(sb.toString(), 5000);
+							File downloadsFolder = new File(
+									Paths.get(System.getProperty("user.home"), "Downloads").toString());
+							List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(1));
+							if (filesDeleted.size() > 0) {
+								StringBuilder sb = new StringBuilder();
+								filesDeleted.forEach(f -> sb.append(f + "\n"));
+								AutoCloseJOption.show(truncate(sb.toString(), 1000), "Files Deleted", 5000);
+							}
 						}
 					}, new BackgroundProcess("Health Check", Time.seconds(30)) {
 
 						@Override
 						public void doWork() {
-							// TODO Auto-generated method stub
-
+							// TODO something
 						}
 					}));
 
@@ -101,7 +100,7 @@ public class SystemTool {
 			// Start Background Processes
 			backgroundProcesses.forEach(process -> process.start());
 
-			AutoCloseJOption.show("System Tools Started", 3000);
+			// AutoCloseJOption.show("System Tools Started", 3000);
 			workstationListener = new WorkstationLockListener() {
 
 				@Override
@@ -117,6 +116,31 @@ public class SystemTool {
 		} catch (Exception e) {
 			Logger.error(e);
 		}
+	}
+
+	/**
+	 * Delete anything in the given path older than the given time (ms)
+	 */
+	private static List<String> cleanupPath(File path, long time) {
+		List<String> deletedFiles = new ArrayList<String>();
+		long now = System.currentTimeMillis();
+		Arrays.asList(path.listFiles()).forEach(file -> {
+			if (file.isDirectory()) {
+				deletedFiles.addAll(cleanupPath(file, time));
+			}
+			// If the file is older than the limit or is an empty folder
+			if (now - time > file.lastModified() || (file.isDirectory() && file.list().length == 0)) {
+				try {
+					if ((file.isDirectory() && file.list().length == 0) || !file.isDirectory()) {
+						file.delete();
+						deletedFiles.add(file.getAbsolutePath());
+					}
+				} catch (Exception e) {
+					Logger.error(e, "Error Deleting file");
+				}
+			}
+		});
+		return deletedFiles;
 	}
 
 	/**
@@ -142,8 +166,7 @@ public class SystemTool {
 				if (process.isRunning()) {
 					process.pause();
 					subItem.setLabel("Start " + process.toString());
-				}
-				else {
+				} else {
 					process.run();
 					subItem.setLabel("Pause " + process.toString());
 				}
