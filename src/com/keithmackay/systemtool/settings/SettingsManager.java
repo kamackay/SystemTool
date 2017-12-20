@@ -138,4 +138,6 @@ public class SettingsManager {
 			Logger.error(e, "Could not save settings data");
 		}
 	}
+
+
 }

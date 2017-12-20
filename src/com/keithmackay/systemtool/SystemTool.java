@@ -1,6 +1,8 @@
 package com.keithmackay.systemtool;
 
 import com.keithmackay.systemtool.processes.BackgroundProcess;
+import com.keithmackay.systemtool.clipboard.ClipboardChangeListener;
+import com.keithmackay.systemtool.clipboard.ClipboardManager;
 import com.keithmackay.systemtool.settings.Settings;
 import com.keithmackay.systemtool.settings.SettingsManager;
 import com.keithmackay.systemtool.utils.Time;
@@ -11,8 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -96,6 +96,13 @@ public class SystemTool {
 				frame.setResizable(false);
 				frame.setVisible(false);
 				tray.add(trayIcon);
+				new ClipboardManager(new ClipboardChangeListener() {
+
+					@Override
+					public void onClipboardChange(String clipboard) {
+						Logger.info("Clipboard Contents Changed - {}", clipboard);
+					}
+				});
 			} catch (AWTException e) {
 				String errorMessage = "TrayIcon could not be added";
 				Logger.error(errorMessage);
