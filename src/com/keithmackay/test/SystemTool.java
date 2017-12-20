@@ -138,10 +138,8 @@ public class SystemTool {
 	private static PopupMenu createPopupMenu() {
 		final PopupMenu popup = new PopupMenu();
 		MenuItem aboutItem = new MenuItem("About");
-		aboutItem.addActionListener(event -> {
-			AutoCloseJOption.show(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017",
-					VERSION.toString()), 3000);
-		});
+		aboutItem.addActionListener(event -> AutoCloseJOption.show(String.format(Locale.getDefault(), "Version: %s\nWritten by: Keith MacKay\n2017",
+				VERSION.toString()), 3000));
 		MenuItem exitItem = new MenuItem("Exit");
 		exitItem.addActionListener(event -> System.exit(0));
 
@@ -171,19 +169,19 @@ public class SystemTool {
 	/**
 	 * Show a message
 	 *
-	 * @param message
-	 * @param title
-	 * @param type
+	 * @param message - The message to show
+	 * @param title   - Title to show
+	 * @param type    - The dialog type
 	 */
-	protected static void showMessage(String message, String title, int type) {
+	private static void showMessage(String message, String title, int type) {
 		JOptionPane.showMessageDialog(null, message, title, type);
 	}
 
 	/**
 	 * Show a message
 	 *
-	 * @param message
-	 * @param title
+	 * @param message - The message to show
+	 * @param title   - Title to show
 	 */
 	protected static void showMessage(String message, String title) {
 		showMessage(message, title, JOptionPane.PLAIN_MESSAGE);
@@ -192,31 +190,30 @@ public class SystemTool {
 	/**
 	 * Show a message
 	 *
-	 * @param message
+	 * @param message - The message to show
 	 */
-	protected static void showMessage(String message) {
+	private static void showMessage(String message) {
 		showMessage(message, "System Tool", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	/**
 	 * Query a user
 	 *
-	 * @param message
-	 * @param title
+	 * @param message - The message to show
+	 * @param title   - Title to show
 	 * @return The user's response
 	 */
-	protected static int query(String message, String title) {
-		int result = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION);
-		return result;
+	private static int query(String message, String title) {
+		return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION);
 	}
 
 	/**
 	 * Query a user
 	 *
-	 * @param message
+	 * @param message - The message to show
 	 * @return the user's response
 	 */
-	protected static int query(String message) {
+	private static int query(String message) {
 		return query(message, "System Tool");
 	}
 }

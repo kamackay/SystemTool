@@ -5,7 +5,7 @@ import java.util.Locale;
 public class VersionData {
 	private int major, minor, revision;
 
-	public VersionData(int major, int minor, int revision) {
+	VersionData(int major, int minor, int revision) {
 		this.major = major;
 		this.minor = minor;
 		this.revision = revision;

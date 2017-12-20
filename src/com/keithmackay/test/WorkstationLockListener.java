@@ -1,29 +1,24 @@
 package com.keithmackay.test;
 
-import java.util.Locale;
-
-import org.pmw.tinylog.Logger;
-
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinDef.HMODULE;
-import com.sun.jna.platform.win32.WinDef.HWND;
-import com.sun.jna.platform.win32.WinDef.LPARAM;
-import com.sun.jna.platform.win32.WinDef.LRESULT;
-import com.sun.jna.platform.win32.WinDef.WPARAM;
+import com.sun.jna.platform.win32.WinDef.*;
 import com.sun.jna.platform.win32.WinUser;
+import com.sun.jna.platform.win32.WinUser.MSG;
 import com.sun.jna.platform.win32.WinUser.WNDCLASSEX;
 import com.sun.jna.platform.win32.WinUser.WindowProc;
 import com.sun.jna.platform.win32.Wtsapi32;
-import com.sun.jna.platform.win32.WinUser.MSG;
+import org.pmw.tinylog.Logger;
+
+import java.util.Locale;
 
 public abstract class WorkstationLockListener implements WindowProc {
 
 	/**
 	 * Instantiates a new win32 window test.
 	 */
-	public WorkstationLockListener() {
+	WorkstationLockListener() {
 		// define new window class
 		final WString windowClass = new WString("MyWindowClass");
 		final HMODULE hInst = Kernel32.INSTANCE.GetModuleHandle("");
@@ -62,7 +57,7 @@ public abstract class WorkstationLockListener implements WindowProc {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.sun.jna.platform.win32.User32.WindowProc#callback(com.sun.jna.platform
 	 * .win32.WinDef.HWND, int, com.sun.jna.platform.win32.WinDef.WPARAM,
@@ -70,25 +65,25 @@ public abstract class WorkstationLockListener implements WindowProc {
 	 */
 	public LRESULT callback(HWND hwnd, int uMsg, WPARAM wParam, LPARAM lParam) {
 		switch (uMsg) {
-		case WinUser.WM_DESTROY: {
-			User32.INSTANCE.PostQuitMessage(0);
-			return new LRESULT(0);
-		}
-		case WinUser.WM_SESSION_CHANGE: {
-			this.onSessionChange(wParam, lParam);
-			return new LRESULT(0);
-		}
-		default:
-			return User32.INSTANCE.DefWindowProc(hwnd, uMsg, wParam, lParam);
+			case WinUser.WM_DESTROY: {
+				User32.INSTANCE.PostQuitMessage(0);
+				return new LRESULT(0);
+			}
+			case WinUser.WM_SESSION_CHANGE: {
+				this.onSessionChange(wParam, lParam);
+				return new LRESULT(0);
+			}
+			default:
+				return User32.INSTANCE.DefWindowProc(hwnd, uMsg, wParam, lParam);
 		}
 	}
 
 	/**
 	 * Gets the last error.
-	 * 
+	 *
 	 * @return the last error
 	 */
-	public int getLastError(String message) {
+	private int getLastError(String message) {
 		int rc = Kernel32.INSTANCE.GetLastError();
 		if (rc != 0) {
 			Logger.error(String.format(Locale.getDefault(), "%s - %d",
@@ -103,38 +98,34 @@ public abstract class WorkstationLockListener implements WindowProc {
 
 	/**
 	 * On session change.
-	 * 
-	 * @param wParam
-	 *            the w param
-	 * @param lParam
-	 *            the l param
+	 *
+	 * @param wParam the w param
+	 * @param lParam the l param
 	 */
-	protected void onSessionChange(WPARAM wParam, LPARAM lParam) {
+	private void onSessionChange(WPARAM wParam, LPARAM lParam) {
 		switch (wParam.intValue()) {
-		case Wtsapi32.WTS_SESSION_LOCK: {
-			this.onMachineLocked(lParam.intValue());
-			break;
-		}
-		case Wtsapi32.WTS_SESSION_UNLOCK: {
-			this.onMachineUnlocked(lParam.intValue());
-			break;
-		}
+			case Wtsapi32.WTS_SESSION_LOCK: {
+				this.onMachineLocked(lParam.intValue());
+				break;
+			}
+			case Wtsapi32.WTS_SESSION_UNLOCK: {
+				this.onMachineUnlocked(lParam.intValue());
+				break;
+			}
 		}
 	}
 
 	/**
 	 * On machine locked.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	protected abstract void onMachineLocked(int sessionId);
 
 	/**
 	 * On machine unlocked.
-	 * 
-	 * @param sessionId
-	 *            the session id
+	 *
+	 * @param sessionId the session id
 	 */
 	protected abstract void onMachineUnlocked(int sessionId);
 }
