@@ -43,7 +43,9 @@ public class SettingsManager {
 				boolean created = this.settingsFile.createNewFile();
 				if (!created) Logger.error("Did not Create Settings File");
 				else {
-					this.gson.toJson(this.settings, new FileWriter(this.settingsFile));
+					try (FileWriter writer = new FileWriter(this.settingsFile)) {
+						this.gson.toJson(this.settings, writer);
+					}
 				}
 			} catch (IOException e) {
 				Logger.error(e, "Could not create Settings File");
@@ -62,12 +64,14 @@ public class SettingsManager {
 	}
 
 	private void initSettings() {
-		try {
-			Map<String, String> temp = this.gson.fromJson(new JsonReader(new FileReader(this.settingsFile)), new TypeToken<Map<String, String>>() {
+		try (FileReader reader = new FileReader(this.settingsFile)) {
+			Map<String, String> temp = this.gson.fromJson(new JsonReader(reader), new TypeToken<Map<String, String>>() {
 			}.getType());
 			if (temp != null) this.settings = temp;
 		} catch (FileNotFoundException e) {
 			Logger.error(e, "Could not find settings file");
+		} catch (IOException e) {
+			Logger.error(e, "Error writing to settings file");
 		}
 	}
 
