@@ -42,11 +42,12 @@ public class SettingsManager {
 			try {
 				boolean created = this.settingsFile.createNewFile();
 				if (!created) Logger.error("Did not Create Settings File");
+				/*
 				else {
 					try (FileWriter writer = new FileWriter(this.settingsFile)) {
 						this.gson.toJson(this.settings, writer);
 					}
-				}
+				}//*/
 			} catch (IOException e) {
 				Logger.error(e, "Could not create Settings File");
 			}
@@ -80,8 +81,10 @@ public class SettingsManager {
 	}
 
 	public void setString(String name, String value) {
+		String currentVal = this.settings.getOrDefault(name, null);
 		this.settings.put(name, value);
-		this.invalidate();
+		if (value != null && !value.equals(currentVal)) this.invalidate();
+		Logger.info("Set \"{}\" to \"{}\"", name, value);
 	}
 
 	public void setBool(String name, boolean value) {
@@ -133,11 +136,10 @@ public class SettingsManager {
 		String json = SettingsManager.this.gson.toJson(SettingsManager.this.settings);
 		try (FileWriter writer = new FileWriter(SettingsManager.this.settingsFile, false)) {
 			writer.write(json);
-			Logger.debug("Successfully wrote Settings");
+			Logger.info("Successfully wrote Settings - {}", json);
+			this.changesPending = false;
 		} catch (IOException e) {
 			Logger.error(e, "Could not save settings data");
 		}
 	}
-
-
 }

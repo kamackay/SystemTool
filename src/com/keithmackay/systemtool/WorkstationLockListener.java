@@ -1,5 +1,7 @@
 package com.keithmackay.systemtool;
 
+import com.keithmackay.systemtool.settings.Settings;
+import com.keithmackay.systemtool.settings.SettingsManager;
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
@@ -33,8 +35,7 @@ public abstract class WorkstationLockListener implements WindowProc {
 		getLastError("Register Class Segment");
 
 		// create new window
-		final HWND hWnd = User32.INSTANCE.CreateWindowEx(User32.WS_EX_TOPMOST, windowClass,
-				"'TimeTracker hidden helper window to catch Windows events", 0, 0, 0, 0, 0, null, null, hInst, null);
+		final HWND hWnd = User32.INSTANCE.CreateWindowEx(User32.WS_EX_TOPMOST, windowClass, "'TimeTracker hidden helper window to catch Windows events", 0, 0, 0, 0, 0, null, null, hInst, null);
 
 		getLastError("Creating Window");
 		Logger.info("window sucessfully created! window hwnd: " + hWnd.getPointer().toString());
@@ -86,8 +87,7 @@ public abstract class WorkstationLockListener implements WindowProc {
 	private int getLastError(String message) {
 		int rc = Kernel32.INSTANCE.GetLastError();
 		if (rc != 0) {
-			Logger.error(String.format(Locale.getDefault(), "%s - %d",
-					message == null ? "WorkstationLockListener" : message, rc));
+			Logger.error(String.format(Locale.getDefault(), "%s - %d", message == null ? "WorkstationLockListener" : message, rc));
 		}
 		return rc;
 	}
@@ -103,14 +103,14 @@ public abstract class WorkstationLockListener implements WindowProc {
 	 * @param lParam the l param
 	 */
 	private void onSessionChange(WPARAM wParam, LPARAM lParam) {
-		switch (wParam.intValue()) {
-			case Wtsapi32.WTS_SESSION_LOCK: {
-				this.onMachineLocked(lParam.intValue());
-				break;
-			}
-			case Wtsapi32.WTS_SESSION_UNLOCK: {
-				this.onMachineUnlocked(lParam.intValue());
-				break;
+		if (SettingsManager.getInstance().getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)) {
+			switch (wParam.intValue()) {
+				case Wtsapi32.WTS_SESSION_LOCK: {
+					this.onMachineLocked(lParam.intValue());
+				}
+				case Wtsapi32.WTS_SESSION_UNLOCK: {
+					this.onMachineUnlocked(lParam.intValue());
+				}
 			}
 		}
 	}

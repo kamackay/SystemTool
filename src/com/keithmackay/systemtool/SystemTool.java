@@ -114,16 +114,12 @@ public class SystemTool {
 
 				@Override
 				protected void onMachineLocked(int sessionId) {
-					if (settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)) {
-						Logger.info("Machine Unlocked");
-					}
+					Logger.info("Machine locked");
 				}
 
 				@Override
 				protected void onMachineUnlocked(int sessionId) {
-					if (settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)) {
-						AutoCloseJOption.show("Welcome Back", 3000);
-					}
+					AutoCloseJOption.show("Welcome Back", 3000);
 				}
 			};
 		} catch (Exception e) {
@@ -179,11 +175,11 @@ public class SystemTool {
 			subItem.addItemListener(event -> {
 				if (process.isRunning()) {
 					process.pause();
-					subItem.setState(false);
+//					subItem.setState(false);
 					Logger.info("Started process {}", process.toString());
 				} else {
 					process.run();
-					subItem.setState(true);
+//					subItem.setState(true);
 					Logger.info("Paused process {}", process.toString());
 				}
 			});
@@ -192,7 +188,7 @@ public class SystemTool {
 		CheckboxMenuItem workspaceListenerItem = new CheckboxMenuItem();
 		workspaceListenerItem.setLabel("Workspace Monitor");
 		workspaceListenerItem.setState(settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true));
-		workspaceListenerItem.addItemListener(event -> settingsManager.setBool(Settings.WORKSPACE_MONITOR_RUNNING, !settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true)));
+		workspaceListenerItem.addItemListener(event -> settingsManager.setBool(Settings.WORKSPACE_MONITOR_RUNNING, workspaceListenerItem.getState()));
 
 		// Add components to pop-up menu
 		popup.add(processesItem);
