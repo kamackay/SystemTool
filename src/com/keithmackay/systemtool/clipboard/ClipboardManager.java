@@ -1,11 +1,14 @@
 package com.keithmackay.systemtool.clipboard;
 
 import com.keithmackay.systemtool.SizedStack;
+import com.keithmackay.systemtool.settings.Settings;
 import com.keithmackay.systemtool.settings.SettingsManager;
+import org.pmw.tinylog.Logger;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,11 +30,19 @@ public class ClipboardManager {
 				if (cont != null && !cont.equals(getMostRecent())) {
 					//Clipboard Changed
 					history.push(cont);
+					settingsManager.setJsonObject(Settings.CLIPBOARD_HISTORY, history);
 					listener.onClipboardChange(cont);
 				}
 			}
 		}, 0, 100);
-
+		try {
+			ArrayList<String> stack = (ArrayList<String>) this.settingsManager.getJsonObject(Settings.CLIPBOARD_HISTORY, ArrayList.class);
+			stack.forEach(item -> {
+				if (item != null) this.history.push(item);
+			});
+		} catch (Exception e) {
+			Logger.error(e, "Could not get old Clipboard data");
+		}
 	}
 
 	private String getMostRecent() {

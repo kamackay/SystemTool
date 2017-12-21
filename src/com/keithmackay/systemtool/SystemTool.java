@@ -1,8 +1,7 @@
 package com.keithmackay.systemtool;
 
-import com.keithmackay.systemtool.processes.BackgroundProcess;
-import com.keithmackay.systemtool.clipboard.ClipboardChangeListener;
 import com.keithmackay.systemtool.clipboard.ClipboardManager;
+import com.keithmackay.systemtool.processes.BackgroundProcess;
 import com.keithmackay.systemtool.settings.Settings;
 import com.keithmackay.systemtool.settings.SettingsManager;
 import com.keithmackay.systemtool.utils.Time;

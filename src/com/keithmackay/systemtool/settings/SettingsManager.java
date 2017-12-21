@@ -99,6 +99,10 @@ public class SettingsManager {
 		this.setString(name, String.valueOf(value));
 	}
 
+	public void setJsonObject(String name, Object object){
+		this.setString(name, gson.toJson(object));
+	}
+
 	public String getString(String name, String defaultVal) {
 		String value = this.settings.get(name);
 		return value == null ? defaultVal : value;
@@ -130,6 +134,18 @@ public class SettingsManager {
 			Logger.error(e, "Could not parse setting value {}", str);
 			return defaultVal;
 		}
+	}
+
+	/**
+	 * Will Default to null
+	 * @param name The name of the JSON object to retrieve
+	 * @param type The expected type
+	 * @return The requested JSON object, or null
+	 */
+	public Object getJsonObject(String name, Class type){
+		String str = this.getString(name, null);
+		if (str == null) return null;
+		return gson.fromJson(str, type);
 	}
 
 	private void saveSettings() {
