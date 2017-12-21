@@ -6,6 +6,7 @@ import com.keithmackay.systemtool.settings.Settings;
 import com.keithmackay.systemtool.settings.SettingsManager;
 import com.keithmackay.systemtool.utils.Time;
 import com.keithmackay.systemtool.utils.VersionData;
+import com.keithmackay.systemtool.windows.ClipboardWindow;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
@@ -25,17 +27,19 @@ public class SystemTool {
 	private static final VersionData VERSION = new VersionData(1, 0, 0);
 	private static List<BackgroundProcess> backgroundProcesses;
 	private static SettingsManager settingsManager;
+	private static ClipboardManager clipboardManager;
 
 	public static void main(String[] args) {
 		try {
 			Logger.info("Start Initialization");
 			final Frame frame = new Frame("");
+			frame.setIconImage(getIcon());
 			// Check the SystemTray is supported
 			if (!SystemTray.isSupported()) {
 				Logger.error("SystemTray is not supported");
 				return;
 			}
-			final TrayIcon trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png")), "System Tools");
+			final TrayIcon trayIcon = new TrayIcon(getIcon(), "System Tools");
 			trayIcon.setImageAutoSize(true);
 			final SystemTray tray = SystemTray.getSystemTray();
 
@@ -95,7 +99,7 @@ public class SystemTool {
 				frame.setResizable(false);
 				frame.setVisible(false);
 				tray.add(trayIcon);
-				new ClipboardManager(clipboard -> {
+				clipboardManager = new ClipboardManager(clipboard -> {
 					Logger.info("Clipboard Contents Changed - {}", clipboard);
 				});
 				Runtime.getRuntime().addShutdownHook(new Thread(() -> tray.remove(trayIcon)));
@@ -124,6 +128,10 @@ public class SystemTool {
 		} catch (Exception e) {
 			Logger.error(e);
 		}
+	}
+
+	public static Image getIcon() throws MalformedURLException {
+		return Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png"));
 	}
 
 	/**
@@ -174,11 +182,11 @@ public class SystemTool {
 			subItem.addItemListener(event -> {
 				if (process.isRunning()) {
 					process.pause();
-//					subItem.setState(false);
+					//					subItem.setState(false);
 					Logger.info("Started process {}", process.toString());
 				} else {
 					process.run();
-//					subItem.setState(true);
+					//					subItem.setState(true);
 					Logger.info("Paused process {}", process.toString());
 				}
 			});
@@ -189,7 +197,14 @@ public class SystemTool {
 		workspaceListenerItem.setState(settingsManager.getBool(Settings.WORKSPACE_MONITOR_RUNNING, true));
 		workspaceListenerItem.addItemListener(event -> settingsManager.setBool(Settings.WORKSPACE_MONITOR_RUNNING, workspaceListenerItem.getState()));
 
+		MenuItem clipboardItem = new MenuItem();
+		clipboardItem.setLabel("Clipboard Manager");
+		clipboardItem.addActionListener(event -> {
+			new ClipboardWindow(clipboardManager);
+		});
+
 		// Add components to pop-up menu
+		popup.add(clipboardItem);
 		popup.add(processesItem);
 		popup.add(workspaceListenerItem);
 		popup.add(aboutItem);
