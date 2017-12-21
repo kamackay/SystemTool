@@ -22,4 +22,9 @@ public class SizedStack<T> extends Stack<T> {
 	public List<T> toList(){
 		return new ArrayList<>(this);
 	}
+
+	public void setMaxSize(int size){
+		this.maxSize = size;
+		while (this.size() >= this.maxSize) this.remove(0);
+	}
 }

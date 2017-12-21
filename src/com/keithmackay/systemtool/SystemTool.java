@@ -2,15 +2,19 @@ package com.keithmackay.systemtool;
 
 import com.keithmackay.systemtool.clipboard.ClipboardManager;
 import com.keithmackay.systemtool.processes.BackgroundProcess;
+import com.keithmackay.systemtool.settings.SettingChangeListener;
 import com.keithmackay.systemtool.settings.Settings;
 import com.keithmackay.systemtool.settings.SettingsManager;
 import com.keithmackay.systemtool.utils.Time;
 import com.keithmackay.systemtool.utils.VersionData;
 import com.keithmackay.systemtool.windows.ClipboardWindow;
+import com.keithmackay.systemtool.windows.UserQueryWindow;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -20,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
+import static com.keithmackay.systemtool.utils.Utils.isNumeric;
 import static com.keithmackay.systemtool.utils.Utils.truncate;
 
 public class SystemTool {
@@ -46,7 +51,7 @@ public class SystemTool {
 			settingsManager = SettingsManager.getInstance();
 			settingsManager.setString(Settings.VERSION, VERSION.toString());
 
-			backgroundProcesses = new ArrayList<>(Arrays.asList(new BackgroundProcess("Clean Downloads", Time.minutes(5)) {
+			backgroundProcesses = new ArrayList<>(Arrays.asList(new BackgroundProcess("Clean Downloads", Settings.DOWNLOAD_MANAGER_RUNNING, Time.minutes(5)) {
 
 				@Override
 				public void doWork() {
@@ -59,12 +64,6 @@ public class SystemTool {
 					} else {
 						Logger.info("No files in Downloads folder to delete");
 					}
-				}
-			}, new BackgroundProcess("Health Check", Time.seconds(30)) {
-
-				@Override
-				public void doWork() {
-					// TODO something
 				}
 			}));
 
@@ -203,9 +202,23 @@ public class SystemTool {
 			new ClipboardWindow(clipboardManager);
 		});
 
+		Menu preferencesMenu = new Menu("Preferences");
+		MenuItem clipboardSizeItem = new MenuItem();
+		SettingChangeListener listener = () -> {
+			clipboardSizeItem.setLabel(String.format("Max Clipboard Size (%d)", settingsManager.getLong(Settings.MAX_CLIPBOARD_ELEMENTS, 100)));
+		};
+		settingsManager.addSettingChangeListener(Settings.MAX_CLIPBOARD_ELEMENTS, listener);
+		listener.onSettingChange();
+		clipboardSizeItem.addActionListener(e -> {
+			String newVal = UserQueryWindow.show("What do you want to be the max saved clipboard items?", settingsManager.getString(Settings.MAX_CLIPBOARD_ELEMENTS, "100"));
+			if (isNumeric(newVal)) settingsManager.setString(Settings.MAX_CLIPBOARD_ELEMENTS, newVal);
+		});
+		preferencesMenu.add(clipboardSizeItem);
+
 		// Add components to pop-up menu
 		popup.add(clipboardItem);
 		popup.add(processesItem);
+		popup.add(preferencesMenu);
 		popup.add(workspaceListenerItem);
 		popup.add(aboutItem);
 		popup.addSeparator();

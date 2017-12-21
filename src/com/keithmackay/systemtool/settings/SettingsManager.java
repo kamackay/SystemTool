@@ -8,13 +8,11 @@ import org.pmw.tinylog.Logger;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class SettingsManager {
 	private static SettingsManager singleton = null;
+	private Map<Settings, List<SettingChangeListener>> settingChangeListeners;
 
 	public static SettingsManager getInstance() {
 		if (singleton == null) singleton = new SettingsManager();
@@ -29,6 +27,8 @@ public class SettingsManager {
 	private SettingsManager() {
 		settings = new HashMap<>();
 		this.gson = new GsonBuilder().create();
+		this.settingChangeListeners = new HashMap<>();
+		Arrays.stream(Settings.values()).forEach(setting -> this.settingChangeListeners.put(setting, new ArrayList<>()));
 		String appDataFolder = System.getenv("APPDATA");
 		File settingsFolder = new File(Paths.get(appDataFolder, "SystemTool").toString());
 		if (!settingsFolder.exists()) {
@@ -76,45 +76,46 @@ public class SettingsManager {
 		}
 	}
 
-	private void invalidate() {
+	private void invalidate(Settings setting) {
 		this.changesPending = true;
+		this.settingChangeListeners.get(setting).forEach(SettingChangeListener::onSettingChange);
 	}
 
-	public void setString(String name, String value) {
-		String currentVal = this.settings.getOrDefault(name, null);
-		this.settings.put(name, value);
-		if (value != null && !value.equals(currentVal)) this.invalidate();
-		Logger.info("Set \"{}\" to \"{}\"", name, value);
+	public void setString(Settings name, String value) {
+		String currentVal = this.settings.getOrDefault(name.toString(), null);
+		this.settings.put(name.toString(), value);
+		if (value != null && !value.equals(currentVal)) this.invalidate(name);
+		Logger.info("Set \"{}\" to \"{}\"", name.toString(), value);
 	}
 
-	public void setBool(String name, boolean value) {
+	public void setBool(Settings name, boolean value) {
 		this.setString(name, value ? "true" : "false");
 	}
 
-	public void setLong(String name, long value) {
+	public void setLong(Settings name, long value) {
 		this.setString(name, String.valueOf(value));
 	}
 
-	public void setDouble(String name, float value) {
+	public void setDouble(Settings name, float value) {
 		this.setString(name, String.valueOf(value));
 	}
 
-	public void setJsonObject(String name, Object object){
+	public void setJsonObject(Settings name, Object object) {
 		this.setString(name, gson.toJson(object));
 	}
 
-	public String getString(String name, String defaultVal) {
-		String value = this.settings.get(name);
+	public String getString(Settings name, String defaultVal) {
+		String value = this.settings.get(name.toString());
 		return value == null ? defaultVal : value;
 	}
 
-	public boolean getBool(String name, boolean defaultVal) {
+	public boolean getBool(Settings name, boolean defaultVal) {
 		String str = this.getString(name, null);
 		if (str == null) return defaultVal;
 		return "true".equals(str);
 	}
 
-	public long getLong(String name, long defaultVal) {
+	public long getLong(Settings name, long defaultVal) {
 		String str = this.getString(name, null);
 		if (str == null) return defaultVal;
 		try {
@@ -125,7 +126,7 @@ public class SettingsManager {
 		}
 	}
 
-	public double getDouble(String name, double defaultVal) {
+	public double getDouble(Settings name, double defaultVal) {
 		String str = this.getString(name, null);
 		if (str == null) return defaultVal;
 		try {
@@ -138,14 +139,19 @@ public class SettingsManager {
 
 	/**
 	 * Will Default to null
+	 *
 	 * @param name The name of the JSON object to retrieve
 	 * @param type The expected type
 	 * @return The requested JSON object, or null
 	 */
-	public Object getJsonObject(String name, Class type){
+	public Object getJsonObject(Settings name, Class type) {
 		String str = this.getString(name, null);
 		if (str == null) return null;
 		return gson.fromJson(str, type);
+	}
+
+	public void addSettingChangeListener(Settings setting, SettingChangeListener listener) {
+		this.settingChangeListeners.get(setting).add(listener);
 	}
 
 	private void saveSettings() {

@@ -6,4 +6,17 @@ public class Utils {
 		boolean shortened = newLen != s.length();
 		return s.substring(0, newLen) + (shortened ? "..." : ""); // Append ellipsis if truncated
 	}
+
+	public static boolean isNumeric(String str) {
+		if (str == null) {
+			return false;
+		}
+		int sz = str.length();
+		for (int i = 0; i < sz; i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

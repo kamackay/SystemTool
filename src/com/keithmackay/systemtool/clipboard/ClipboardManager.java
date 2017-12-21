@@ -18,9 +18,9 @@ public class ClipboardManager {
 	private SettingsManager settingsManager;
 
 	public ClipboardManager(ClipboardChangeListener listener) {
-		this.history = new SizedStack<>(100);
-		this.history.push(null);
 		this.settingsManager = SettingsManager.getInstance();
+		this.history = new SizedStack<>((int) settingsManager.getLong(Settings.MAX_CLIPBOARD_ELEMENTS, 100));
+		this.history.push(null);
 		this.clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Timer t = new Timer();
 		t.schedule(new TimerTask() {
@@ -39,6 +39,12 @@ public class ClipboardManager {
 			ArrayList<String> stack = (ArrayList<String>) this.settingsManager.getJsonObject(Settings.CLIPBOARD_HISTORY, ArrayList.class);
 			stack.forEach(item -> {
 				if (item != null) this.history.push(item);
+			});
+			settingsManager.addSettingChangeListener(Settings.MAX_CLIPBOARD_ELEMENTS, () -> {
+				int newSize = (int) settingsManager.getLong(Settings.MAX_CLIPBOARD_ELEMENTS, 100);
+				this.history.setMaxSize(newSize);
+				Logger.info("Set history to size {}", newSize);
+				settingsManager.setJsonObject(Settings.CLIPBOARD_HISTORY, history);
 			});
 		} catch (Exception e) {
 			Logger.error(e, "Could not get old Clipboard data");

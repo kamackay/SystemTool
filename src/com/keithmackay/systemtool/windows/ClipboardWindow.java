@@ -7,10 +7,9 @@ import org.pmw.tinylog.Logger;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Locale;
 
 public class ClipboardWindow extends Frame {
 	private SizedStack<String> clipboardHistory;
@@ -50,6 +49,7 @@ public class ClipboardWindow extends Frame {
 			dispose();
 		});
 		this.add(listView);
+		this.setTitle(String.format(Locale.getDefault(), "Clipboard Manager - %d items", this.clipboardHistory.size()));
 	}
 
 	private Dimension getScreenSize() {

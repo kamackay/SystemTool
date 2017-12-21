@@ -9,13 +9,15 @@ import java.util.TimerTask;
 
 public abstract class BackgroundProcess {
 	private String name;
+	private Settings runningSetting;
 	private long time;
 	private boolean started = false;
 	private Timer timer;
 	private SettingsManager settingsManager;
 
-	protected BackgroundProcess(String name, long time) {
+	protected BackgroundProcess(String name, Settings runningSetting, long time) {
 		this.name = name;
+		this.runningSetting = runningSetting;
 		this.time = time;
 		this.timer = new Timer();
 		this.settingsManager = SettingsManager.getInstance();
@@ -57,11 +59,11 @@ public abstract class BackgroundProcess {
 	}
 
 	public boolean isRunning() {
-		return this.settingsManager.getBool(Settings.BACKGROUND_PROCESS_RUNNING + "_" + name, true);
+		return this.settingsManager.getBool(this.runningSetting, true);
 	}
 
 	private void setRunning(boolean running){
-		this.settingsManager.setBool(Settings.BACKGROUND_PROCESS_RUNNING + "_" + name, running);
+		this.settingsManager.setBool(this.runningSetting, running);
 	}
 
 
