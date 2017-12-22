@@ -62,7 +62,7 @@ public abstract class BackgroundProcess {
 		return this.settingsManager.getBool(this.runningSetting, true);
 	}
 
-	private void setRunning(boolean running){
+	private void setRunning(boolean running) {
 		this.settingsManager.setBool(this.runningSetting, running);
 	}
 

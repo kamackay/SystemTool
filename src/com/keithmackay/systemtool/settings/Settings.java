@@ -5,7 +5,7 @@ public enum Settings {
 
 	private final String name;
 
-	private Settings(String name) {
+	Settings(String name) {
 		this.name = name;
 	}
 

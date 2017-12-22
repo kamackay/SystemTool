@@ -19,11 +19,11 @@ public class SizedStack<T> extends Stack<T> {
 		return super.push(object);
 	}
 
-	public List<T> toList(){
+	public List<T> toList() {
 		return new ArrayList<>(this);
 	}
 
-	public void setMaxSize(int size){
+	public void setMaxSize(int size) {
 		this.maxSize = size;
 		while (this.size() >= this.maxSize) this.remove(0);
 	}

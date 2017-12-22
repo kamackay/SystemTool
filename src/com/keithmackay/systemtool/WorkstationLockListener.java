@@ -38,7 +38,7 @@ public abstract class WorkstationLockListener implements WindowProc {
 		final HWND hWnd = User32.INSTANCE.CreateWindowEx(User32.WS_EX_TOPMOST, windowClass, "'TimeTracker hidden helper window to catch Windows events", 0, 0, 0, 0, 0, null, null, hInst, null);
 
 		getLastError("Creating Window");
-		Logger.info("window sucessfully created! window hwnd: " + hWnd.getPointer().toString());
+		Logger.info("window successfully created! window hwnd: " + hWnd.getPointer().toString());
 
 		Wtsapi32.INSTANCE.WTSRegisterSessionNotification(hWnd, Wtsapi32.NOTIFY_FOR_THIS_SESSION);
 

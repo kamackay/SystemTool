@@ -13,8 +13,6 @@ import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -235,16 +233,6 @@ public class SystemTool {
 	 */
 	private static void showMessage(String message, String title, int type) {
 		JOptionPane.showMessageDialog(null, message, title, type);
-	}
-
-	/**
-	 * Show a message
-	 *
-	 * @param message - The message to show
-	 * @param title   - Title to show
-	 */
-	protected static void showMessage(String message, String title) {
-		showMessage(message, title, JOptionPane.PLAIN_MESSAGE);
 	}
 
 	/**
