@@ -5,7 +5,7 @@ import org.pmw.tinylog.Logger;
 import javax.swing.*;
 
 
-public abstract class UserQueryWindow {
+public class UserQueryWindow {
 
 	public static String show(String question, String title) {
 		try {
