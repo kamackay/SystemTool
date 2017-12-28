@@ -1,0 +1,33 @@
+
+Executing Command : ping google.com 
+	
+	Pinging google.com [216.58.217.174] with 32 bytes of data:
+	Reply from 216.58.217.174: bytes=32 time=29ms TTL=53
+	Reply from 216.58.217.174: bytes=32 time=29ms TTL=53
+	Reply from 216.58.217.174: bytes=32 time=29ms TTL=53
+	Reply from 216.58.217.174: bytes=32 time=29ms TTL=53
+	
+	Ping statistics for 216.58.217.174:
+	    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+	Approximate round trip times in milli-seconds:
+	    Minimum = 29ms, Maximum = 29ms, Average = 29ms
+
+Took 3.147237 seconds to execute
+Executing Command : "ping google.com" 
+
+Executing Command : 
+
+Executing Command : ping google.com 
+	
+	Pinging google.com [172.217.7.142] with 32 bytes of data:
+	Reply from 172.217.7.142: bytes=32 time=29ms TTL=53
+	Reply from 172.217.7.142: bytes=32 time=29ms TTL=53
+	Reply from 172.217.7.142: bytes=32 time=29ms TTL=53
+	Reply from 172.217.7.142: bytes=32 time=29ms TTL=53
+	
+	Ping statistics for 172.217.7.142:
+	    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+	Approximate round trip times in milli-seconds:
+	    Minimum = 29ms, Maximum = 29ms, Average = 29ms
+
+Took 3.098073 seconds to execute
