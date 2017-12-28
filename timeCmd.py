@@ -6,8 +6,9 @@ from datetime import datetime
 def log(*args, **kwargs):
     sys.stdout.write(*args)
     sys.stdout.flush()
-    with open("timeCmd.log", "a+") as f:
-        f.write(*args)
+    if kwargs.pop("toFile", False):
+        with open("timeCmd.log", "a+") as f:
+            f.write(*args)
 
 
 if __name__ == "__main__":
