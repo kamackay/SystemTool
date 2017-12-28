@@ -54,13 +54,13 @@ public class SystemTool {
 				@Override
 				public void doWork() {
 					File downloadsFolder = new File(Paths.get(System.getProperty("user.home"), "Downloads").toString());
-					List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(14));
+					List<String> filesDeleted = cleanupPath(downloadsFolder, Time.days(settingsManager.getLong(Settings.DELETE_DOWNLOADS_DAYS, 7)));
 					if (filesDeleted.size() > 0) {
 						StringBuilder sb = new StringBuilder();
 						filesDeleted.forEach(f -> sb.append(f).append("\n"));
 						AutoCloseJOption.show(truncate(sb.toString(), 1000), "Files Deleted", 5000);
 					} else {
-						Logger.info("No files in Downloads folder to delete");
+						Logger.info("No files in Downloads folder to delete that are more than {} days old", settingsManager.getLong(Settings.DELETE_DOWNLOADS_DAYS, 7));
 					}
 				}
 			}));
@@ -202,16 +202,28 @@ public class SystemTool {
 
 		Menu preferencesMenu = new Menu("Preferences");
 		MenuItem clipboardSizeItem = new MenuItem();
-		SettingChangeListener listener = () -> {
+		SettingChangeListener clipboardListener = () -> {
 			clipboardSizeItem.setLabel(String.format("Max Clipboard Size (%d)", settingsManager.getLong(Settings.MAX_CLIPBOARD_ELEMENTS, 100)));
 		};
-		settingsManager.addSettingChangeListener(Settings.MAX_CLIPBOARD_ELEMENTS, listener);
-		listener.onSettingChange();
+		settingsManager.addSettingChangeListener(Settings.MAX_CLIPBOARD_ELEMENTS, clipboardListener);
+		clipboardListener.onSettingChange();
 		clipboardSizeItem.addActionListener(e -> {
 			String newVal = UserQueryWindow.show("What do you want to be the max saved clipboard items?", settingsManager.getString(Settings.MAX_CLIPBOARD_ELEMENTS, "100"));
-			if (isNumeric(newVal)) settingsManager.setString(Settings.MAX_CLIPBOARD_ELEMENTS, newVal);
+			if (!settingsManager.trySetLong(Settings.MAX_CLIPBOARD_ELEMENTS, newVal)) showMessage("Please input a valid integer value.");
 		});
 		preferencesMenu.add(clipboardSizeItem);
+
+		MenuItem downloadDaysItem = new MenuItem();
+		SettingChangeListener downloadDaysListener = () -> {
+			downloadDaysItem.setLabel(String.format("Delete downloads after (%d) days", settingsManager.getLong(Settings.DELETE_DOWNLOADS_DAYS, 7)));
+		};
+		settingsManager.addSettingChangeListener(Settings.DELETE_DOWNLOADS_DAYS, downloadDaysListener);
+		downloadDaysListener.onSettingChange();
+		downloadDaysItem.addActionListener(e -> {
+			String newVal = UserQueryWindow.show("After how many days do you want to delete files in the Downloads folder?", settingsManager.getString(Settings.DELETE_DOWNLOADS_DAYS, "7"));
+			if (!settingsManager.trySetLong(Settings.DELETE_DOWNLOADS_DAYS, newVal)) showMessage("Please input a valid integer value.");
+		});
+		preferencesMenu.add(downloadDaysItem);
 
 		// Add components to pop-up menu
 		popup.add(clipboardItem);

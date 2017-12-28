@@ -96,6 +96,22 @@ public class SettingsManager {
 		this.setString(name, String.valueOf(value));
 	}
 
+	/**
+	 * Attempt to set a long value from a String
+	 *
+	 * @param name  The name of the setting to set
+	 * @param value The string value to attempt to set to the Setting
+	 * @return Whether or not the value was set correctly
+	 */
+	public boolean trySetLong(Settings name, String value) {
+		try {
+			this.setLong(name, Integer.valueOf(value));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public void setDouble(Settings name, float value) {
 		this.setString(name, String.valueOf(value));
 	}
