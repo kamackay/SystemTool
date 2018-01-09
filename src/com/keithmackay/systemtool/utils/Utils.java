@@ -1,5 +1,9 @@
 package com.keithmackay.systemtool.utils;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utils {
 	public static String truncate(String s, int length) {
 		int newLen = Math.min(s.length(), length - 3);
@@ -18,5 +22,15 @@ public class Utils {
 			}
 		}
 		return true;
+	}
+
+	public static List<File> getAllFiles(File root) {
+		List<File> files = new ArrayList<>();
+		File[] list = root.listFiles();
+		if (list != null) for (File f : list) {
+			if (f.isDirectory()) files.addAll(getAllFiles(f));
+			else files.add(f);
+		}
+		return files;
 	}
 }

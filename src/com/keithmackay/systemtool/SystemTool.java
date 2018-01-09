@@ -8,6 +8,7 @@ import com.keithmackay.systemtool.settings.SettingsManager;
 import com.keithmackay.systemtool.utils.Time;
 import com.keithmackay.systemtool.utils.VersionData;
 import com.keithmackay.systemtool.windows.ClipboardWindow;
+import com.keithmackay.systemtool.windows.FindInFilesQueryWindow;
 import com.keithmackay.systemtool.windows.UserQueryWindow;
 import org.pmw.tinylog.Logger;
 
@@ -22,7 +23,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
-import static com.keithmackay.systemtool.utils.Utils.isNumeric;
 import static com.keithmackay.systemtool.utils.Utils.truncate;
 
 public class SystemTool {
@@ -200,6 +200,12 @@ public class SystemTool {
 			new ClipboardWindow(clipboardManager);
 		});
 
+		MenuItem fifItem = new MenuItem();
+		fifItem.setLabel("Find In Files");
+		fifItem.addActionListener(event -> {
+			new FindInFilesQueryWindow();
+		});
+
 		Menu preferencesMenu = new Menu("Preferences");
 		MenuItem clipboardSizeItem = new MenuItem();
 		SettingChangeListener clipboardListener = () -> {
@@ -209,7 +215,8 @@ public class SystemTool {
 		clipboardListener.onSettingChange();
 		clipboardSizeItem.addActionListener(e -> {
 			String newVal = UserQueryWindow.show("What do you want to be the max saved clipboard items?", settingsManager.getString(Settings.MAX_CLIPBOARD_ELEMENTS, "100"));
-			if (!settingsManager.trySetLong(Settings.MAX_CLIPBOARD_ELEMENTS, newVal)) showMessage("Please input a valid integer value.");
+			if (!settingsManager.trySetLong(Settings.MAX_CLIPBOARD_ELEMENTS, newVal))
+				showMessage("Please input a valid integer value.");
 		});
 		preferencesMenu.add(clipboardSizeItem);
 
@@ -221,16 +228,13 @@ public class SystemTool {
 		downloadDaysListener.onSettingChange();
 		downloadDaysItem.addActionListener(e -> {
 			String newVal = UserQueryWindow.show("After how many days do you want to delete files in the Downloads folder?", settingsManager.getString(Settings.DELETE_DOWNLOADS_DAYS, "7"));
-			if (!settingsManager.trySetLong(Settings.DELETE_DOWNLOADS_DAYS, newVal)) showMessage("Please input a valid integer value.");
+			if (!settingsManager.trySetLong(Settings.DELETE_DOWNLOADS_DAYS, newVal))
+				showMessage("Please input a valid integer value.");
 		});
 		preferencesMenu.add(downloadDaysItem);
 
 		// Add components to pop-up menu
-		popup.add(clipboardItem);
-		popup.add(processesItem);
-		popup.add(preferencesMenu);
-		popup.add(workspaceListenerItem);
-		popup.add(aboutItem);
+		new ArrayList<>(Arrays.asList(clipboardItem, fifItem, processesItem, preferencesMenu, workspaceListenerItem, aboutItem)).forEach(popup::add);
 		popup.addSeparator();
 		popup.add(exitItem);
 		return popup;
