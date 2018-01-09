@@ -10,7 +10,7 @@ public class UserQueryWindow {
 	public static String show(String question, String title) {
 		try {
 			return JOptionPane.showInputDialog(question, title);
-		} catch (Exception e){
+		} catch (Exception e) {
 			Logger.error(e, "Could not show popup");
 		}
 		return null;

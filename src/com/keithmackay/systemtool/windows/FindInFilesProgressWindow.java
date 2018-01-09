@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.keithmackay.systemtool.utils.Utils.getAllFiles;
 
