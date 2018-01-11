@@ -10,6 +10,8 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.keithmackay.systemtool.utils.Utils.getAppSettingsFolder;
+
 public class SettingsManager {
 	private static SettingsManager singleton = null;
 	private Map<Settings, List<SettingChangeListener>> settingChangeListeners;
@@ -29,14 +31,7 @@ public class SettingsManager {
 		this.gson = new GsonBuilder().create();
 		this.settingChangeListeners = new HashMap<>();
 		Arrays.stream(Settings.values()).forEach(setting -> this.settingChangeListeners.put(setting, new ArrayList<>()));
-		String appDataFolder = System.getenv("APPDATA");
-		File settingsFolder = new File(Paths.get(appDataFolder, "SystemTool").toString());
-		if (!settingsFolder.exists()) {
-			boolean created = settingsFolder.mkdir();
-			if (!created) {
-				Logger.error("Could not create path");
-			}
-		}
+		File settingsFolder = getAppSettingsFolder();
 		this.settingsFile = new File(Paths.get(settingsFolder.getAbsolutePath(), "settings.json").toString());
 		if (!this.settingsFile.exists()) {
 			try {

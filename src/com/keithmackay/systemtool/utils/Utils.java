@@ -1,6 +1,9 @@
 package com.keithmackay.systemtool.utils;
 
+import org.pmw.tinylog.Logger;
+
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +35,17 @@ public class Utils {
 			else files.add(f);
 		}
 		return files;
+	}
+
+	public static File getAppSettingsFolder(){
+		String appData = System.getenv("APPDATA");
+		File settingsFolder = new File(Paths.get(appData, "SystemTool").toString());
+		if (!settingsFolder.exists()) {
+			boolean created = settingsFolder.mkdir();
+			if (!created) {
+				Logger.error("Could not create path");
+			}
+		}
+		return settingsFolder;
 	}
 }

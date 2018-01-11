@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ class FindInFilesProgressWindow extends SystemToolWindow {
 		progressBar.setStringPainted(true);
 
 		new Thread(() -> {
+			List<File> matchingFiles = new ArrayList<>();
 			File root = new File(path);
 			if (root.exists()) {
 				List<File> fileList = getAllFiles(root).stream().filter(file -> file.getAbsolutePath().matches(match)).collect(Collectors.toList());
@@ -40,12 +42,14 @@ class FindInFilesProgressWindow extends SystemToolWindow {
 					try {
 						if (FileUtils.readFileToString(file).contains(text)) {
 							Logger.info("Found! - {}", file.getAbsolutePath());
+							matchingFiles.add(file);
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 					filesChecked.getAndIncrement();
 				});
+				Logger.info("Found {} files that matched", matchingFiles.size());
 			}
 		}).start();
 

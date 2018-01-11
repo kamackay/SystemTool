@@ -11,6 +11,7 @@ import com.keithmackay.systemtool.windows.ClipboardWindow;
 import com.keithmackay.systemtool.windows.FindInFilesQueryWindow;
 import com.keithmackay.systemtool.windows.UserQueryWindow;
 import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.writers.FileWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,17 +24,19 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
+import static com.keithmackay.systemtool.utils.Utils.getAppSettingsFolder;
 import static com.keithmackay.systemtool.utils.Utils.truncate;
 
 public class SystemTool {
 
-	private static final VersionData VERSION = new VersionData(1, 0, 0);
+	private static final VersionData VERSION = new VersionData(1, 1, 0);
 	private static List<BackgroundProcess> backgroundProcesses;
 	private static SettingsManager settingsManager;
 	private static ClipboardManager clipboardManager;
 
 	public static void main(String[] args) {
 		try {
+			Logger.getConfiguration().writer(new FileWriter(getLogPath())).activate();
 			Logger.info("Start Initialization");
 			final Frame frame = new Frame("");
 			frame.setIconImage(getIcon());
@@ -129,6 +132,10 @@ public class SystemTool {
 
 	public static Image getIcon() throws MalformedURLException {
 		return Toolkit.getDefaultToolkit().getImage(new URL("http://keithmackay.com/images/settings.png"));
+	}
+
+	public static String getLogPath(){
+		return new File(getAppSettingsFolder(), "log.txt").getAbsolutePath();
 	}
 
 	/**
